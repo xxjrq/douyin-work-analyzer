@@ -158,7 +158,9 @@ function meaningfulLines(text) {
   return String(text || "")
     .split(/\r?\n/)
     .map((line) => line.replace(/[\u200b\ufeff]/g, "").replace(/\s+/g, " ").trim())
-    .filter((line) => line && !/^(登录|注册|首页|推荐|朋友|消息|我|分享|返回|更多)$/.test(line));
+    .filter((line) => line && !/^(登录|注册|首页|推荐|朋友|消息|我|分享|返回|更多|充钻石|通知|投稿|综合|视频|用户|直播|多列|单列|筛选|客户端|壁纸)$/.test(line))
+    .filter((line) => !/^20\d{2} © 抖音$/.test(line))
+    .filter((line) => !/(?:ICP备|京公网安备|许可证|营业执照|备案|人服证|举报|服务协议|隐私政策|账号找回|联系我们|加入我们|友情链接|站点地图)/.test(line));
 }
 
 function detectAccessGate(text) {
@@ -177,7 +179,9 @@ function detectAccessGate(text) {
 function visibleAuthor(snapshot, lines) {
   const authorLine = lines.find((line) => /^(作者|创作者|发布者)\s*[:：]/.test(line));
   if (authorLine) return authorLine.replace(/^(作者|创作者|发布者)\s*[:：]\s*/, "").trim() || null;
-  const link = snapshot.interactive.find((item) => item?.visible !== false && /\/user\//.test(String(item.href || "")) && String(item.text || "").trim());
+  const atLine = lines.find((line) => /^@[\p{L}\p{N}_-]{1,80}/u.test(line));
+  if (atLine) return atLine.replace(/^@/, "").trim() || null;
+  const link = snapshot.interactive.find((item) => item?.visible !== false && /\/user\/(?!self(?:[/?#]|$))/.test(String(item.href || "")) && String(item.text || "").trim());
   return link ? String(link.text).trim().slice(0, 120) : null;
 }
 
@@ -188,6 +192,7 @@ function visibleDescription(lines, title, author, { skip = [] } = {}) {
     if (ignored.has(line)) return false;
     if (/^(作者|创作者|发布者)\s*[:：]/.test(line)) return false;
     if (/^(点赞|评论|收藏|分享)\s*[:：]?\s*[\d,.]+/.test(line)) return false;
+    if (/(?:ICP备|京公网安备|许可证|营业执照|备案|人服证|举报|服务协议|隐私政策|账号找回|联系我们|加入我们|友情链接|站点地图)/.test(line)) return false;
     if (/^(?:#[\p{L}\p{N}_-]+\s*)+$/u.test(line)) return false;
     return line.length >= 8;
   });
@@ -231,8 +236,11 @@ function buildReport(snapshot, sourceUrl, capturedAt = new Date().toISOString())
   const title = snapshot.title && !/^抖音/.test(snapshot.title) ? snapshot.title.slice(0, 240) : lines[0]?.slice(0, 240) || null;
   const author = visibleAuthor(snapshot, lines);
   const description = visibleDescription(lines, title, author);
-  const hashtags = extractHashtags(snapshot.text);
-  const metrics = visibleMetrics(snapshot.text);
+  // Keep extraction near the page identity. A Douyin detail page can append a
+  // recommendation feed and footer to the same DOM snapshot.
+  const contentText = [snapshot.title, ...lines.slice(0, 40)].filter(Boolean).join("\n");
+  const hashtags = extractHashtags(contentText);
+  const metrics = visibleMetrics(lines.slice(0, 40).join("\n"));
   const hookText = description || title;
   const topic = hashtags.length ? hashtags.slice(0, 5).join("、") : (description ? description.slice(0, 48) : null);
   const metricEvidence = lines.filter((line) => /(点赞|评论|收藏|分享)/.test(line)).slice(0, 8);
