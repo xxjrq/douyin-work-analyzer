@@ -1,0 +1,11 @@
+{
+  "name": "douyin-work-analyzer",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node scripts/douyin-work-analyzer.mjs self-test"
+  }
+}

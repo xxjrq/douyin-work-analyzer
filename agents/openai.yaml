@@ -1,0 +1,8 @@
+interface:
+  display_name: "抖音作品分析"
+  short_description: "分析一个抖音作品并导出 Markdown 与 JSON 报告"
+  default_prompt: "使用 $douyin-work-analyzer 分析这个抖音作品页面，输出结构化报告。"
+  brand_color: "#2563EB"
+
+policy:
+  allow_implicit_invocation: true
