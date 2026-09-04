@@ -1,6 +1,6 @@
 name: douyin-work-analyzer
 slug: douyin-work-analyzer
-version: 0.1.0
+version: 0.1.1
 category: 抖音研究 / Douyin Research
 author: xxjrq
 description: 通过 Easy WebBridge 分析一个抖音作品页面的可见标题、文案、作者、话题和互动信息，输出 Markdown 与 JSON 报告；不批量爬取、不绕过登录、不评论和发布。
