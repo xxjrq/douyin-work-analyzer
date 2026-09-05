@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "kind": "douyin-work-analysis",
+  "source": {
+    "url": "https://www.douyin.com/video/7677916780626595113",
+    "pageUrl": "https://www.douyin.com/video/7677916780626595113",
+    "pageTitle": "小白入门AI，如何快速选出最适合自己的AI工具 #AI工具 #AI学习 #AI教程 #Agent #ai新星计划 - 抖音",
+    "capturedAt": "2026-09-05T08:16:13.152Z",
+    "method": "Easy WebBridge visible page snapshot"
+  },
+  "work": {
+    "title": "小白入门AI，如何快速选出最适合自己的AI工具 #AI工具 #AI学习 #AI教程 #Agent #ai新星计划",
+    "author": null,
+    "description": null,
+    "hashtags": [
+      "#AI工具",
+      "#AI学习",
+      "#AI教程",
+      "#Agent",
+      "#ai新星计划"
+    ],
+    "visibleMetrics": {
+      "点赞": null,
+      "评论": null,
+      "收藏": null,
+      "分享": null
+    }
+  },
+  "analysis": {
+    "hook": {
+      "text": null,
+      "type": "未能从可见文本确认"
+    },
+    "topic": "#AI工具、#AI学习、#AI教程、#Agent、#ai新星计划",
+    "structure": [
+      {
+        "section": "开头钩子",
+        "evidence": null,
+        "confidence": "none"
+      },
+      {
+        "section": "主体信息",
+        "evidence": null,
+        "confidence": "none"
+      },
+      {
+        "section": "结尾行动",
+        "evidence": null,
+        "confidence": "none"
+      }
+    ],
+    "strengths": [
+      "页面展示了 5 个话题标签，可用于归纳内容方向"
+    ],
+    "issues": [
+      "没有从保留的页面证据中确认作品作者",
+      "没有从保留的页面证据中确认原作品文案",
+      "未从页面快照确认视频镜头、剪辑节奏、配乐和完整字幕"
+    ],
+    "reusableIdeas": [
+      "围绕 #AI工具、#AI学习、#AI教程 设计同主题选题，不直接复制原作内容",
+      "先用 1 个明确问题或结果承诺抓住注意力，再在主体给出可验证的信息"
+    ]
+  },
+  "evidence": {
+    "visibleTextSample": [
+      "小白入门AI，如何快速选出最适合自己的AI工具 #AI工具 #AI学习 #AI教程 #Agent #ai新星计划"
+    ],
+    "metricLines": [],
+    "extractionNotes": [
+      "字段只来自当前页面快照；空值表示未在可见内容中确认。",
+      "作者只接受目标作品文本区域内的明确作者标签或 @作者文本；当前保留证据不满足该条件，因此保持 null。",
+      "页面“总结”区域属于辅助摘要，不作为原作品文案或开头钩子证据。",
+      "快照未提供带明确标签的互动数字，因此互动字段保持 null；未将无标签数字按位置猜测映射。"
+    ]
+  },
+  "limitations": [
+    "这是单个页面的点时快照，不是官方榜单、历史趋势或真实性证明。",
+    "页面快照不能证明视频画面、镜头节奏、音乐、语气或完整字幕。",
+    "不抓取推荐流、不批量爬取、不读取浏览器身份存储、本地网页存储、网络正文或非公开数据。"
+  ]
+}

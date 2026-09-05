@@ -1,91 +1,79 @@
 ---
 name: douyin-work-analyzer
-description: 分析一个公开可见的抖音作品页面，读取已登录 Easy WebBridge 浏览器中的页面文本和可见元数据，输出 Markdown 与 JSON 作品分析报告。Use when a user gives a Douyin work URL and wants to understand its hook, topic, structure, visible metrics, strengths, weaknesses, or reusable ideas. Requires an authorized Easy WebBridge browser; never batch-crawls, bypasses login, comments, publishes, or accesses non-public data.
+description: 对用户明确指定的单个抖音公开作品页面执行只读可见页面分析，提取标题、作品文案、作者、话题标签和可见互动信息，并导出 Markdown 与 JSON 报告。Use when the user asks for 抖音作品分析、分析抖音视频、分析这个抖音链接、抖音内容拆解、抖音视频结构、抖音开头钩子、抖音作品文案分析、抖音作者和话题提取、导出抖音作品 Markdown 或 JSON 报告、Douyin work analysis, or to analyze a Douyin video page. Requires a legally authorized Easy WebBridge browser; never batch collect accounts, scrape comment lists, download videos, bypass verification, or access non-public data.
 ---
 
 # 抖音作品分析
 
-使用这个 Skill 分析**一个**抖音作品页面。它把当前页面能看到的标题、作者、文案、话题和互动数字整理成一份可复查的报告，并明确哪些结论只是根据可见文本推断。
+## 适用范围
 
-## 运行方式
+仅分析用户明确指定的一个 `douyin.com` 作品 URL。通过用户已合法登录、授权并连接 Easy WebBridge 的 Chromium 浏览器读取一次可见页面快照，生成：
 
-脚本只依赖 Node.js 20+，不需要安装依赖。先确认 Easy WebBridge 已运行且目标浏览器扩展显示已连接：
+- `douyin-work-analysis.md`
+- `douyin-work-analysis.json`
 
-```bash
-node scripts/douyin-work-analyzer.mjs \
-  analyze \
-  --url "https://www.douyin.com/video/作品ID" \
-  --browserId "浏览器ID" \
-  --output "./reports/作品ID"
-```
+事实字段只来自采集时刻的可见页面证据。无法确认时使用 `null`、空数组或限制说明，不用搜索摘要或模型猜测补齐。
 
-参数：
+## 执行流程
 
-- `--url`：一个抖音作品 URL。只接受 `douyin.com` 及其子域名。
-- `--browserId`：要使用的 Easy WebBridge 浏览器 ID。省略时仅在只有一个在线浏览器时自动选择。
-- `--output`：报告目录，默认 `./douyin-work-analysis`。
-- `--tabId`：可选；使用已打开的目标标签页，不再新开页面。未提供时脚本会创建一个任务专属标签组。
-- `--keep-tab`：可选；分析结束后保留本次创建的标签组。默认会关闭本次创建的组，不影响用户原有标签页。
-- `--wait-ms`：导航后等待页面渲染的毫秒数，默认 1500，范围 300～10000。
+1. 确认输入是单个抖音作品 URL；仅接受 `/video/<作品ID>` 或 `/note/<作品ID>`，拒绝首页、搜索页、推荐页和短链，并确认用户有权访问当前浏览器页面。
+2. 优先复用用户提供的 `tabId`；未提供时创建任务独立 session 和新标签页。
+3. 依次执行 Bridge 健康检查、在线浏览器选择、导航、等待和一次 `snapshot`。
+4. 检测登录墙、验证码、安全验证、空快照和非抖音跳转；命中后立即失败，不降级猜测。
+5. 用输入作品 ID、快照实际 URL、页面标题、同作品交互节点、可见话题组合或“发布时间”附近的作品详情簇建立身份锚点；无法建立边界时停止，不从快照前若干行猜测。只在锚点附近且评论区、搜索推荐或推荐流分隔符以内提取事实。作者只接受该区域中的明确“作者/创作者/发布者”标签或 `@作者` 文本，不从全局 `/user/` 链接猜测；“总结”“章节要点”等页面辅助摘要不属于作品文案，也不得用于生成开头钩子。评论区单独出现登录提示不等于整页门禁。
+6. 将事实、证据、推断和限制分区写入两份报告。
+7. 在 `finally` 中关闭本次创建的 session；`--keep-tab` 除外。不得关闭用户原有标签页。
 
-成功后目录内只有两份交付文件：
+## 命令
 
-```text
-douyin-work-analysis.json   # 结构化数据、证据、推断和限制
-douyin-work-analysis.md     # 人可直接阅读的报告
-```
-
-真实运行前，脚本会检查 `GET /health`、读取在线浏览器并使用 `Authorization: Bearer ...` 调用本机 API。Token 读取顺序为 `EASY_WEBBRIDGE_TOKEN`、`EASY_WEBBRIDGE_TOKEN_FILE`，最后是 `~/.easy-webbridge/bridge-token`；Token 永远不会写入报告或日志。默认 API 地址为 `http://127.0.0.1:17777`，可用 `EASY_WEBBRIDGE_URL` 覆盖。
-
-## 固定流程
-
-1. 校验 URL、输出目录和等待时间。
-2. 检查 Easy WebBridge 健康状态和 Token；列出在线浏览器，精确选择 `browserId`。
-3. 未指定 `tabId` 时，以 `douyin-work-analyzer-<run-id>` 创建一个任务标签组并打开 URL；连续步骤复用同一标签页。
-4. 只读取一次页面快照（标题、URL、可见正文和交互元素），不点击、不填写、不上传、不执行页面脚本。
-5. 从快照中抽取字段并标注证据来源；无法确认的字段写 `null` 或空数组，不猜测。
-6. 写出 JSON 和 Markdown；在 `finally` 中关闭本次创建的标签组，除非用户明确传入 `--keep-tab`。
-
-报告中的分析包括：开头钩子、主题、可见内容结构、可见互动指标、亮点、问题、可借鉴方向和限制。视频画面节奏、镜头、音乐、语气、完整字幕等不在页面快照中时，报告会明确写“未从当前页面确认”。
-
-## 无浏览器自测
-
-用固定快照检查解析和文件输出，不需要 Token 或登录态：
-
-```bash
-node scripts/douyin-work-analyzer.mjs self-test
-```
-
-也可以直接提供自己的快照：
+真实运行：
 
 ```bash
 node scripts/douyin-work-analyzer.mjs analyze \
-  --mock ./fixtures/sample-snapshot.json \
-  --output ./reports/mock
+  --url "https://www.douyin.com/video/7677916780626595113" \
+  --browserId "<online-browser-id>" \
+  --output "./reports/7677916780626595113"
 ```
 
-`--mock` 只用于开发和验收，不能当作真实抖音数据来源。快照格式为 `{title, url, text, interactive}`，也接受 Easy WebBridge 返回的 `{result: {...}}` 包装格式。
+本地成功样例：
 
-## 约束
+```bash
+node scripts/douyin-work-analyzer.mjs analyze \
+  --mock "./fixtures/sample-snapshot.json" \
+  --output "./reports/mock-success"
+```
 
-- 只分析用户指定的一个作品和当前页面公开可见内容；不批量爬取、轮询、抓取推荐流或建立作者数据库。
-- 不绕过登录、验证码、风控、访问控制或付费限制；遇到登录页、验证码或权限提示立即停止并说明原因。
-- 不读取 Cookie、Local Storage、网络请求正文或非公开接口；不把 Token、Cookie、账号信息、`browserId`、session 名称写进报告。
-- 不点赞、不评论、不关注、不私信、不收藏、不发布、不修改账号资料、不下载作品，也不执行其他副作用操作。
-- 页面上的互动数是当前快照中的可见值，不等于官方榜单、历史趋势或真实性背书；报告必须带采集时间和原始页面 URL。
-- Easy WebBridge 是运行前置条件；本 Skill 不复制扩展、不启动新浏览器、不要求用户重复登录。登录和浏览器授权由用户负责。
+失败样例：
 
-## 故障处理
+```bash
+node scripts/douyin-work-analyzer.mjs analyze --mock ./fixtures/failure-login-gate.json --output /tmp/douyin-login-failure
+node scripts/douyin-work-analyzer.mjs analyze --mock ./fixtures/failure-empty-snapshot.json --output /tmp/douyin-empty-failure
+```
 
-- `Bridge 不可达`：启动 Easy WebBridge 后重试，不要改用未经授权的远程服务。
-- `401 Unauthorized`：检查本机 Token 或扩展配对，不要把 Token 粘贴到报告或聊天记录。
-- `没有在线浏览器`：打开已授权的 Chromium 浏览器并确认扩展状态。
-- `browserId 不明确`：传入准确的 `--browserId`，不要向多个浏览器广播命令。
-- `页面要求登录/验证码`：停止，要求用户在目标浏览器中完成合法登录或验证。
-- `快照字段为空`：保留空值和限制说明；不要用搜索引擎摘要或猜测补齐。
+固定自测：
 
-## 资源
+```bash
+npm test
+```
 
-- `manifest.yaml`：跨 Agent/SkillHub 元数据。
-- `agents/openai.yaml`：界面名称和默认提示。
-- `scripts/douyin-work-analyzer.mjs`：API 调用、解析、报告生成和自测实现。
+## 输入和错误契约
+
+- 命令：`analyze`、`self-test`、`help`。
+- 参数：`--url`、`--browserId`/`--browser-id`、`--tabId`/`--tab-id`、`--output`、`--wait-ms`、`--keep-tab`、`--mock`、`--help`/`-h`。
+- 未声明参数（包括 `--browser`）必须以退出码 `2` 拒绝，不能静默接受。
+- `waitMs` 范围为 `300`～`10000`，默认 `1500`。
+- 用法错误退出码 `2`；运行、解析或 Bridge 错误退出码 `1`；成功退出码 `0`。
+- 成功 stdout 为机器可读 JSON；失败 stderr 必须可行动，且不得写入访问凭证、Cookie、浏览器标识、session 名称或桥接敏感正文。
+- 多个在线浏览器且未精确选择时必须停止，不广播命令。
+
+## 严格边界
+
+不得读取 Cookie、Local Storage、网络请求正文、账号凭证或非公开接口；不得点击、填写、执行页面脚本、点赞、评论、关注、收藏、私信、发布、下载作品或修改账号状态。不得批量采集账号、抓取评论列表、轮询推荐流、建立作者数据库或生成历史趋势。
+
+页面互动数字只代表采集时刻的显示值；“万/亿”换算不是官方精确历史数据。页面快照不能证明视频镜头、剪辑、配乐、语气或完整字幕。
+
+## 验收与发布表述
+
+`fixtures/sample-snapshot.json` 是虚构开发样例，不能证明指定真实作品分析成功。真实验收必须命令退出码为 `0` 且生成双报告，并按验收配置核对：`humanReview.enabled=true` 时，由人工对照同一采集时点页面；`humanReview.enabled=false` 时，每个非空事实字段必须能由报告保留的最小快照或截图证据独立核对，无法独立追溯的作者、作品文案或互动字段必须保持 `null`/空数组。两种模式都不能用 mock、搜索摘要或推断替代真实页面证据。
+
+当前 SkillHub 状态为 `submitted`，准确表述是“已提交/待审核”，不能表述为已审核、已上架、公开可安装或发布完成。未经当前远端证据也不得声称 GitHub 已同步。

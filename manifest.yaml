@@ -1,26 +1,33 @@
-name: douyin-work-analyzer
-slug: douyin-work-analyzer
-version: 0.1.1
-category: 抖音研究 / Douyin Research
-author: xxjrq
-description: 通过 Easy WebBridge 分析一个抖音作品页面的可见标题、文案、作者、话题和互动信息，输出 Markdown 与 JSON 报告；不批量爬取、不绕过登录、不评论和发布。
+name: "douyin-work-analyzer"
+slug: "douyin-work-analyzer"
+version: "0.1.1"
+category: "抖音研究 / Douyin Research"
+author: "xxjrq"
+description: "通过已授权的 Easy WebBridge 浏览器只读分析单个抖音公开作品页面的可见信息，并导出 Markdown 与 JSON 报告。"
+icon: "assets/icon-512.png"
 trigger_words:
-  - 抖音作品分析
-  - 分析抖音视频
-  - 抖音视频结构
-  - 抖音开头钩子
-  - 抖音内容拆解
+  - "抖音作品分析"
+  - "分析抖音视频"
+  - "分析这个抖音链接"
+  - "抖音内容拆解"
+  - "抖音视频结构"
+  - "抖音开头钩子"
+  - "抖音作品文案分析"
+  - "抖音作者和话题提取"
+  - "导出抖音作品 Markdown 报告"
+  - "导出抖音作品 JSON 报告"
+  - "Douyin work analysis"
+  - "analyze a Douyin video page"
 tags:
-  - douyin
-  - content-analysis
-  - creator-research
-  - easy-webbridge
-  - 抖音分析
-  - 内容拆解
-license: MIT
-repository: https://github.com/xxjrq/douyin-work-analyzer
-homepage: https://github.com/xxjrq/douyin-work-analyzer
+  - "douyin"
+  - "content-analysis"
+  - "creator-research"
+  - "easy-webbridge"
+license: "MIT"
+repository: "https://github.com/xxjrq/douyin-work-analyzer"
+homepage: "https://github.com/xxjrq/douyin-work-analyzer"
+self_test: "npm test"
 dependencies:
-  - name: easy-webbridge
+  - name: "easy-webbridge"
     version: ">=0.3.0"
-    repository: https://github.com/xxjrq/easy-webbridge
+    repository: "https://github.com/xxjrq/easy-webbridge"

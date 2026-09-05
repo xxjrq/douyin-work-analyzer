@@ -2,6 +2,7 @@
   "name": "douyin-work-analyzer",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "engines": {
     "node": ">=20"
   },
