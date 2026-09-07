@@ -1,12 +1,22 @@
-# 抖音作品分析
+# 免费抖音作品分析
 
-在用户已经合法登录、授权并连接 Easy WebBridge 的 Chromium 浏览器中，对一个明确指定的抖音公开作品页面执行一次只读快照，提取页面可见事实并生成 Markdown 与 JSON 报告。
+免费分析单个抖音视频或图文作品：不用注册第三方分析网站，不需要申请第三方 API Key。把作品链接交给 Agent，即可整理页面可见的标题、文案、作者、话题和互动信息，并分析开头钩子、内容结构、亮点、问题与可借鉴方向。
+
+## 亮点
+
+- **免费**：开源使用，不按分析次数收费。
+- **免额外登录**：公开作品可直接处理，不用注册第三方分析站；抖音出现登录墙时再登录抖音。
+- **免第三方 Key**：不用购买数据接口，也不用配置第三方内容分析 API Key。
+- **支持视频和图文**：可分析 `/video/` 与 `/note/` 单作品页面。
+- **双格式报告**：输出 Markdown 给人阅读，同时输出 JSON 供 Agent 或脚本继续使用。
+
+项目地址：[GitHub](https://github.com/xxjrq/douyin-work-analyzer) · [Gitee 备用镜像](https://gitee.com/xxjrq/douyin-work-analyzer)
 
 ## 前置条件
 
 - Node.js `>=20`，无第三方运行时依赖。
 - 已安装并启动 Easy WebBridge，默认地址为 `http://127.0.0.1:17777`。
-- 浏览器已合法登录抖音并连接 Bridge；本工具不会绕过登录、验证码、风控、地区或访问控制。
+- 浏览器已连接 Bridge；公开作品可直接分析。抖音要求登录或验证时，在自己的授权浏览器完成后再继续。
 - 访问凭证读取顺序：`EASY_WEBBRIDGE_TOKEN`、`EASY_WEBBRIDGE_TOKEN_FILE`、`~/.easy-webbridge/bridge-token`。
 
 ## 快速开始
@@ -64,13 +74,11 @@ node scripts/douyin-work-analyzer.mjs analyze --mock ./fixtures/failure-empty-sn
 - 不点击、填写、执行页面脚本、点赞、评论、关注、收藏、私信、发布或下载作品。
 - 页面快照不能证明视频镜头、剪辑节奏、配乐、语气或完整字幕；未出现的信息必须标记为未确认。
 
-## 真实验收与发布状态
+## 真实验收
 
 指定验收 URL 为 `https://www.douyin.com/video/7677916780626595113`。真实运行必须在用户授权浏览器中成功并生成双报告。`humanReview.enabled=true` 时，人工在同一采集时点核对事实字段；`humanReview.enabled=false` 时，每个非空事实字段必须能由报告保留的最小快照或截图证据独立核对，无法追溯的字段保持 `null`/空数组。若作品删除、转私密、地区不可见或触发门禁，应记录真实失败，不能用 mock、搜索摘要或推断替代。
 
 `acceptance/real-run-2026-09-05.md` 保存了本轮脱敏真实验收记录。指定 URL 在精确选择的授权浏览器中退出码为 `0`，两份报告位于 `acceptance/real-run-2026-09-05/`；记录按 `humanReview.enabled=false` 使用报告内最小页面证据核对页面 URL、标题和话题。由于保留证据不能独立证明作者和作品文案，这两个字段保持 `null`，章节“总结”也未被当作作品文案或钩子。另一个受登录/验证门禁影响的浏览器仍按失败处理。
-
-截至 `2026-09-05`，SkillHub 状态为 `submitted`，只表示已提交/待审核，不表示已审核、已上架、公开可安装或发布完成。未经刷新远端证据也不声称 GitHub 已同步。
 
 ## 图标与许可证
 

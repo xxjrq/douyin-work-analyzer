@@ -1,9 +1,19 @@
 ---
 name: douyin-work-analyzer
-description: 对用户明确指定的单个抖音公开作品页面执行只读可见页面分析，提取标题、作品文案、作者、话题标签和可见互动信息，并导出 Markdown 与 JSON 报告。Use when the user asks for 抖音作品分析、分析抖音视频、分析这个抖音链接、抖音内容拆解、抖音视频结构、抖音开头钩子、抖音作品文案分析、抖音作者和话题提取、导出抖音作品 Markdown 或 JSON 报告、Douyin work analysis, or to analyze a Douyin video page. Requires a legally authorized Easy WebBridge browser; never batch collect accounts, scrape comment lists, download videos, bypass verification, or access non-public data.
+description: 免费分析用户指定的单个抖音视频或图文作品，不用注册第三方分析站，也不需要第三方 API Key。通过 Easy WebBridge 读取公开页面可见的标题、文案、作者、话题和互动信息，分析开头钩子、内容结构、亮点、问题与可借鉴方向，并导出 Markdown 和 JSON 报告。Use when the user asks for 抖音作品分析、分析抖音视频、分析抖音图文、分析这个抖音链接、抖音内容拆解、抖音视频结构、抖音开头钩子、抖音作品文案分析、抖音作者和话题提取、Douyin work analysis, or a reviewable Douyin report. Public pages can be analyzed directly; if Douyin presents a login or verification wall, stop and ask the user to complete it in their own authorized browser.
 ---
 
-# 抖音作品分析
+# 免费抖音作品分析
+
+## 先说亮点
+
+- **免费**：开源使用，不按分析次数收费。
+- **免额外登录**：不用注册第三方分析网站；公开作品可直接处理，抖音出现登录墙时再登录抖音。
+- **免第三方 Key**：不需要申请付费数据接口或第三方内容分析 API Key。
+- **视频、图文都能分析**：支持 `/video/` 与 `/note/` 单作品页面。
+- **结果能继续使用**：同时导出人能读的 Markdown 和便于 Agent、脚本继续处理的 JSON。
+
+把一个抖音作品链接交给 Agent，即可整理页面可见信息，并给出钩子、结构、亮点、问题和可借鉴方向。
 
 ## 适用范围
 
@@ -72,8 +82,6 @@ npm test
 
 页面互动数字只代表采集时刻的显示值；“万/亿”换算不是官方精确历史数据。页面快照不能证明视频镜头、剪辑、配乐、语气或完整字幕。
 
-## 验收与发布表述
+## 验收
 
 `fixtures/sample-snapshot.json` 是虚构开发样例，不能证明指定真实作品分析成功。真实验收必须命令退出码为 `0` 且生成双报告，并按验收配置核对：`humanReview.enabled=true` 时，由人工对照同一采集时点页面；`humanReview.enabled=false` 时，每个非空事实字段必须能由报告保留的最小快照或截图证据独立核对，无法独立追溯的作者、作品文案或互动字段必须保持 `null`/空数组。两种模式都不能用 mock、搜索摘要或推断替代真实页面证据。
-
-当前 SkillHub 状态为 `submitted`，准确表述是“已提交/待审核”，不能表述为已审核、已上架、公开可安装或发布完成。未经当前远端证据也不得声称 GitHub 已同步。

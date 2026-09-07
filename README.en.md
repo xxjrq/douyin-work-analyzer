@@ -1,12 +1,22 @@
-# Douyin Work Analyzer
+# Free Douyin Work Analyzer
 
-This skill takes one read-only snapshot of a user-specified public Douyin work page in a legally authorized Chromium browser connected through Easy WebBridge. It extracts visible page facts and produces Markdown and JSON reports.
+Analyze one public Douyin video or image post for free, without registering for a third-party analysis service or configuring a third-party API key. Give the Agent a work URL to extract visible titles, descriptions, creators, hashtags, and engagement data, then review the hook, structure, strengths, issues, and reusable ideas.
+
+## Highlights
+
+- **Free and open source**: no per-analysis charge.
+- **No extra account**: public works can be handled directly; sign in to Douyin only if Douyin presents its own login wall.
+- **No third-party API key**: no paid data provider or content-analysis key is required.
+- **Video and image posts**: supports single `/video/` and `/note/` pages.
+- **Reusable outputs**: produces both human-readable Markdown and structured JSON.
+
+Repository: [GitHub](https://github.com/xxjrq/douyin-work-analyzer) · [Gitee mirror](https://gitee.com/xxjrq/douyin-work-analyzer)
 
 ## Prerequisites
 
 - Node.js `>=20`; there are no third-party runtime dependencies.
 - Easy WebBridge is installed and running at `http://127.0.0.1:17777` by default.
-- The browser is legally signed in to Douyin and connected to the Bridge. This tool does not bypass login, CAPTCHA, risk controls, regional restrictions, or access controls.
+- The browser is connected to the Bridge. Public works can be analyzed directly; if Douyin presents a login or verification wall, complete it in your own authorized browser before continuing.
 - Credential lookup order: `EASY_WEBBRIDGE_TOKEN`, `EASY_WEBBRIDGE_TOKEN_FILE`, then `~/.easy-webbridge/bridge-token`.
 
 ## Quick Start
@@ -64,13 +74,11 @@ Unavailable fields remain `null` or empty arrays. Abbreviated visible counts suc
 - Does not click, type, inject page scripts, like, comment, follow, favorite, message, publish, or download media.
 - A page snapshot does not prove shots, editing rhythm, music, tone, or complete subtitles. Missing information stays unconfirmed.
 
-## Real Acceptance and Release Status
+## Real Acceptance
 
 The designated acceptance URL is `https://www.douyin.com/video/7677916780626595113`. A real run must succeed in the user's authorized browser and create both reports. With `humanReview.enabled=true`, a human compares factual fields against the page at the same capture time. With `humanReview.enabled=false`, every non-null factual field must be independently traceable to the minimal snapshot or screenshot evidence retained with the report; fields without that evidence stay `null` or empty. Neither mode may substitute a fixture, search snippet, or inference for real page evidence.
 
 `acceptance/real-run-2026-09-05.md` records the redacted real acceptance. The designated URL completed with exit code `0` in one precisely selected authorized browser, and both reports are stored under `acceptance/real-run-2026-09-05/`. With `humanReview.enabled=false`, the retained evidence independently supports the page URL, title, and hashtags. Author and work description remain `null` because the retained evidence does not independently establish them, and the UI chapter summary is not used as a description or hook. A different browser that showed a login/verification gate remained a failure.
-
-As of `2026-09-05`, the SkillHub status is `submitted`. This means submitted/pending review only, not approved, listed, publicly installable, or fully released. The repository also does not claim that GitHub is synchronized without current remote evidence.
 
 ## Icon and License
 
