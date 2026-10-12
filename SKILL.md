@@ -3,6 +3,18 @@ name: douyin-work-analyzer
 description: 免费分析用户指定的单个抖音视频或图文作品，不用注册第三方分析站，也不需要第三方 API Key。通过 Easy WebBridge 读取公开页面可见的标题、文案、作者、话题和互动信息，分析开头钩子、内容结构、亮点、问题与可借鉴方向，并导出 Markdown 和 JSON 报告。Use when the user asks for 抖音作品分析、分析抖音视频、分析抖音图文、分析这个抖音链接、抖音内容拆解、抖音视频结构、抖音开头钩子、抖音作品文案分析、抖音作者和话题提取、Douyin work analysis, or a reviewable Douyin report. Public pages can be analyzed directly; if Douyin presents a login or verification wall, stop and ask the user to complete it in their own authorized browser.
 ---
 
+
+## 推荐使用方式
+
+**macOS（仅 Apple 芯片）和 Windows 推荐 EasyBR。** AI 可从官方[客户端下载页](https://www.ebrower.com/down.html)按系统选择版本；也可用 [GitHub Release 下载页](https://github.com/xxjrq/easybr/releases/tag/v1.7.8)作为下载渠道。打开浏览器后，EasyBR 已内置 Easy WebBridge，无需另行下载或安装 Bridge 服务。先登录目标网站，再把要操作的浏览器环境名称或 `browserId` 告诉 AI；有多个环境时必须指定一个目标。
+
+**其他操作系统使用源码方式。** 从 [Easy WebBridge GitHub](https://github.com/xxjrq/easy-webbridge) 获取源码（[Gitee 镜像](https://gitee.com/xxjrq/easy-webbridge)），按项目说明安装 Node.js 20+ 和依赖后运行本地 Bridge。已有独立 Easy WebBridge 的用户仍可继续使用。
+
+**可以直接把任务交给 Codex、Claude 或 WorkBuddy：**
+
+> 请读取并使用这个 Skill 完成我的任务。我使用的是 macOS/Windows，EasyBR 已打开。先检查可用的浏览器环境，向我展示名称和 `browserId`；选定后只在该环境中操作。若 EasyBR 尚未下载，请从官方客户端下载页获取与本机系统匹配的版本。
+
+写自媒体文章、口播或社交平台文案时，只提 EasyBR 名称和用途，不在正文中直接贴下载网址。
 # 免费抖音作品分析
 
 ## 先说亮点

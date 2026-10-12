@@ -1,7 +1,7 @@
 name: "douyin-work-analyzer"
 display_name: "免费抖音作品分析"
 slug: "douyin-work-analyzer"
-version: "0.2.0"
+version: "0.2.1"
 category: "抖音研究 / Douyin Research"
 author: "xxjrq"
 description: "免费分析单个抖音视频或图文作品；免注册第三方分析站、免第三方 API Key，导出包含可见信息、钩子、结构、亮点和问题的 Markdown 与 JSON 报告。"

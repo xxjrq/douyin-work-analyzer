@@ -1,6 +1,6 @@
 {
   "name": "douyin-work-analyzer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Free Douyin video and image-post analysis without a third-party account or API key.",
   "private": true,
   "type": "module",
